@@ -7,10 +7,15 @@ Fraction operator/(const Fraction& left, const Fraction& right);
 
 class Fraction
 {
+	bool minus;
 	int integer;       //целая часть
 	int numerator;     //числитель
 	int denominator;   //знаменатель
 public:
+	bool get_minus()
+	{
+		return minus;
+	}
 	int get_integer()const
 	{
 		return integer;
@@ -22,6 +27,11 @@ public:
 	int get_denominator()const
 	{
 		return denominator;
+	}
+	Fraction& set_minus(bool minus)
+	{
+		this->minus = minus;
+		return *this;
 	}
 	void set_integer(int integer)
 	{
@@ -50,6 +60,8 @@ public:
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
+		if (this->integer < 0)this->integer *= (-1);
+		minus = true;
 		cout << "1ArgConstructor:" << this << endl;
 	}
 	Fraction(int numerator, int denominator)                //с двумя параметрами
@@ -57,6 +69,8 @@ public:
 		this->integer = 0;
 		this->numerator = numerator;
 		set_denominator(denominator);
+		if (this->numerator < 0)this->numerator *= (-1);
+		minus = true;
 		cout << "Constructor:" << this << endl;
 	}
 	Fraction(int integer, int numerator, int denominator)   //один универсальный конструкстор с параметрами по умолчанию
@@ -147,6 +161,7 @@ public:
 
 	void print()const                               //выводит дроби на экран
 	{
+		if (minus)cout << "-";
 		if (integer)cout << integer;
 		if (numerator)
 		{
@@ -179,7 +194,7 @@ Fraction operator*( Fraction left, Fraction right)
 	(
 		left.get_numerator() * right.get_numerator(),
 		left.get_denominator() * right.get_denominator()
-	).to_proper().reduce();
+	).to_proper().set_minus(left.get_minus()!=right.get_minus());
 }
 
 Fraction operator/(const Fraction& left, const Fraction& right)
