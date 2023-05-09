@@ -102,6 +102,32 @@ public:
 		return *this = *this / other;
 	}
 
+	//             Increment/Decrement:
+	Fraction& operator++()     //Prefix increment
+	{
+		integer++;
+		return *this;
+	}
+	Fraction operator++(int)   //Postfix increment
+	{
+		Fraction old = *this;
+		integer++;
+		return old;
+	}
+	
+	Fraction& operator--()     //Prefix Decrement
+	{
+		integer--;
+		return *this;
+	}
+	Fraction operator--(int)   //Postfix Decrement
+	{
+		Fraction old = *this;
+		integer--;
+		return old;
+	}
+
+
 	//             Methods:
 	Fraction& to_improper()
 	{
@@ -193,6 +219,46 @@ Fraction operator/(const Fraction& left, const Fraction& right)
 	).to_proper();*/
 	return left * right.inverted();
 }
+
+bool operator==(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	return left.get_numerator() * right.get_denominator() == right.get_numerator() * left.get_denominator();
+	/*
+	if (left.get_numerator() * right.get_denominator() == right.get_numerator() * left.get_denominator())
+		return true;
+	else
+		return false;*/
+}
+bool operator!=(const Fraction& left, const Fraction& right)
+{
+	return !(left == right);
+}
+bool operator>(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	return left.get_numerator() * right.get_denominator() > right.get_numerator() * left.get_denominator();
+
+}
+bool operator<(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	return left.get_numerator() * right.get_denominator() < right.get_numerator() * left.get_denominator();
+
+}
+bool operator>=(const Fraction& left, const Fraction& right)
+{
+	return !(left < right);
+	//return left > right || left == right;
+}
+bool operator<=(const Fraction& left, const Fraction& right)
+{
+	return left < right || left == right;
+}
+
 Fraction operator-(Fraction left, Fraction right)
 {
 	left.to_improper();
@@ -203,8 +269,21 @@ Fraction operator-(Fraction left, Fraction right)
 		left.get_denominator() * right.get_denominator()
 	).to_proper();
 }
+std::ostream& operator << (std::ostream& os, const Fraction& obj)
+{
+	if (obj.get_integer())os << obj.get_integer();
+	if (obj.get_numerator())
+	{
+		if (obj.get_integer())os << "(";
+		os << obj.get_numerator() << "/" << obj.get_denominator();
+		if (obj.get_integer())os << ")";
+	}
+	else if (obj.get_integer() == 0)os << 0;
+	return os;
+}
 
 //#define CONSTRUCTORS_CHECK
+//#define ARITHMETICAL_OPERATORS_CHECK
 
 void main()
 {
@@ -230,6 +309,7 @@ void main()
 	A.print();
 #endif // CONSTRUCTORS_CHECK
 
+#ifdef ARITHMETICAL_OPERATORS_CHECK
 	Fraction A(2, 3, 4);
 	A.print();
 
@@ -256,5 +336,35 @@ void main()
 	A.print();
 
 	(A - B).print();
+
+	for (double i = .75; i < 10; i++)
+	{
+		cout << i << "\t";
+	}
+	cout << endl;
+	for (Fraction i(3, 4); i.get_integer() < 10; i++)
+	{
+		i.print();
+	}
+
+	for (double i = .75; i > 10; i--)
+	{
+		cout << i << "\t";
+	}
+	cout << endl;
+	for (Fraction i(3, 4); i.get_integer() > 10; i--)
+	{
+		i.print();
+	}
+#endif // ARITHMETICAL_OPERATORS_CHECK
+
+	/*cout << (Fraction(1, 2) == Fraction(5, 10)) << endl;
+	cout << (Fraction(1, 2)!= Fraction(5, 10)) << endl;
+	cout << (Fraction(1, 2)> Fraction(5, 10)) << endl;
+	cout << (Fraction(1, 2)< Fraction(5, 10)) << endl;
+	cout << (Fraction(1, 2) >= Fraction(5, 10)) << endl;
+	cout << (Fraction(1, 2) <= Fraction(5, 10)) << endl;*/
+	Fraction A(2, 3, 4);
+	cout << A << endl;
 
 }
