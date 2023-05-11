@@ -1,5 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
 
 class Fraction;
 Fraction operator*(Fraction left, Fraction right);
@@ -281,6 +285,34 @@ std::ostream& operator << (std::ostream& os, const Fraction& obj)
 	else if (obj.get_integer() == 0)os << 0;
 	return os;
 }
+std::istream& operator>>(std::istream& is, Fraction& obj)
+{
+	const int SIZE = 256;
+	char buffer[SIZE] = {};
+	//is >> buffer;
+	is.getline(buffer, SIZE);
+	int number[3] = {};  //здесь будут хранится числа, введённые с клавиатуры
+	int n = 0; //счётчик чисел
+	const char delimiters[] = "( /)";
+	for (char* pch = strtok(buffer, delimiters); pch; pch = strtok(NULL, delimiters))
+	{
+		//указатель 'pch' хранит адрес начала токена
+		//в функцию strtok() только первый раз передаётся делимая строка, при всех последующих вызовов на место делимой строки нужно передавать 'NULL'
+		//это показыает функции strtok() что она работает с ранее переданной строкой
+		//если делимую строку передать ещё раз, то strtok() начнёт обрабатывать её сначала
+		number[n++] = atoi(pch);
+		//atoi() - SACII-string To Integer (эта функция преобразует С-строку в значение типа 'int')
+	}
+	//for (int i = 0; i < n; i++)cout << number[i] << "\t"; cout << endl;
+	obj = Fraction();
+	switch (n)
+	{
+	case 1: obj.set_integer(number[0]); break;
+	case 2: obj.set_numerator(number[0]); obj.set_denominator(number[1]); break;
+	case 3: obj.set_integer(number[0]); obj.set_numerator(number[1]); obj.set_denominator(number[2]); break;
+	}
+	return is;
+}
 
 //#define CONSTRUCTORS_CHECK
 //#define ARITHMETICAL_OPERATORS_CHECK
@@ -364,7 +396,12 @@ void main()
 	cout << (Fraction(1, 2)< Fraction(5, 10)) << endl;
 	cout << (Fraction(1, 2) >= Fraction(5, 10)) << endl;
 	cout << (Fraction(1, 2) <= Fraction(5, 10)) << endl;*/
-	Fraction A(2, 3, 4);
-	cout << A << endl;
+	//Fraction A(2, 3, 4);
+	Fraction A;
+	cout << "Введите простую дробь: "; cin >> A;
 
-}
+	/*cout << A << endl;
+	A.to_improper();*/
+	
+	cout << A << endl;
+} 
