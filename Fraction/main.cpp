@@ -49,13 +49,24 @@ public:
 		this->denominator = 1;
 		cout << "DefaultConstructor:" << this << endl;
 	}
-	Fraction(int integer)                                  //с одним параметром
+	explicit Fraction(int integer)                                  //с одним параметром
 	{
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
 		cout << "1ArgConstructor:" << this << endl;
 	}
+	Fraction(double decimal)
+	{
+		//decimal - десятичная дробь
+		integer = decimal;    //получаем целую часть дробного числа
+		decimal -= integer;   //убираем целую часть из дробного числа
+		denominator = 1000000000;
+		numerator = decimal * denominator;
+		reduce();
+		cout << "1DArgConstructor:\t" << this << endl;
+	}
+
 	Fraction(int numerator, int denominator)                //с двумя параметрами
 	{
 		this->integer = 0;
@@ -131,6 +142,15 @@ public:
 		return old;
 	}
 
+	//             Type-cast operators:
+	explicit operator int()
+	{
+		return integer;
+	}
+	operator double()
+	{
+		return integer + (double)numerator / denominator;
+	}
 
 	//             Methods:
 	Fraction& to_improper()
@@ -316,6 +336,10 @@ std::istream& operator>>(std::istream& is, Fraction& obj)
 
 //#define CONSTRUCTORS_CHECK
 //#define ARITHMETICAL_OPERATORS_CHECK
+//#define ISTREAM_OPERATOR_CHECK
+//#define CONVERSION_FROM_OTHER_TO_CLASS
+//#define CONVERSION_FROM_CLASS_TO_OTHER
+#define HOME_WORK
 
 void main()
 {
@@ -390,18 +414,45 @@ void main()
 	}
 #endif // ARITHMETICAL_OPERATORS_CHECK
 
+#ifdef ISTREAM_OPERATOR_CHECK
 	/*cout << (Fraction(1, 2) == Fraction(5, 10)) << endl;
-	cout << (Fraction(1, 2)!= Fraction(5, 10)) << endl;
-	cout << (Fraction(1, 2)> Fraction(5, 10)) << endl;
-	cout << (Fraction(1, 2)< Fraction(5, 10)) << endl;
-	cout << (Fraction(1, 2) >= Fraction(5, 10)) << endl;
-	cout << (Fraction(1, 2) <= Fraction(5, 10)) << endl;*/
-	//Fraction A(2, 3, 4);
+cout << (Fraction(1, 2)!= Fraction(5, 10)) << endl;
+cout << (Fraction(1, 2)> Fraction(5, 10)) << endl;
+cout << (Fraction(1, 2)< Fraction(5, 10)) << endl;
+cout << (Fraction(1, 2) >= Fraction(5, 10)) << endl;
+cout << (Fraction(1, 2) <= Fraction(5, 10)) << endl;*/
+//Fraction A(2, 3, 4);
 	Fraction A;
 	cout << "Введите простую дробь: "; cin >> A;
 
 	/*cout << A << endl;
 	A.to_improper();*/
-	
+
 	cout << A << endl;
+#endif // ISTREAM_OPERATOR_CHECK
+
+#ifdef CONVERSION_FROM_OTHER_TO_CLASS
+	Fraction A = (Fraction)5;
+	cout << A << endl;
+	Fraction B;
+	B = Fraction(8);
+	cout << B << endl;
+#endif // CONVERSION_FROM_OTHER_TO_CLASS
+
+#ifdef CONVERSION_FROM_CLASS_TO_OTHER
+	Fraction A(2, 3, 4);
+	cout << A << endl;
+
+	int a = (int)A;
+	cout << a << endl;
+
+	double b = A;
+	cout << b << endl;
+#endif // CONVERSION_FROM_CLASS_TO_OTHER
+
+#ifdef HOME_WORK
+	Fraction A = 2.75;
+	cout << A << endl;
+#endif // HOME_WORK
+
 } 
