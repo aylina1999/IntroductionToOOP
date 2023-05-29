@@ -59,6 +59,7 @@ public:
 	Fraction(double decimal)
 	{
 		//decimal - десятичная дробь
+		decimal += 0.0000000001;
 		integer = decimal;    //получаем целую часть дробного числа
 		decimal -= integer;   //убираем целую часть из дробного числа
 		denominator = 1000000000;
