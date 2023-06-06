@@ -1,6 +1,10 @@
 #include<iostream>
 using namespace std;
 
+class String;
+String operator+(const String& left, const String& right);
+
+#define delimiter "\n--------------------------------------------------------\n"
 
 class String
 {
@@ -36,9 +40,19 @@ public:
 	}
 	String(const String& other)
 	{
+		//Deep copy (побитовое копирование):
 		this->size = other.size;
 		this->str = new char[size] {};
 		for (int i = 0; i < size; i++)this->str[i] = other.str[i];
+		cout << "CopyConstructor:\t" << this << endl;
+	}
+	String(String&& other)
+	{
+		//Shallow copy (поверхностное копирование):
+		this->size = other.size;
+		this->str = new char[size] {};
+		other.size = 0;
+		other.str = nullptr;
 		cout << "CopyConstructor:\t" << this << endl;
 	}
 	~String()
@@ -49,6 +63,7 @@ public:
 	//              Operators:
 	String& operator=(const String& other)
 	{
+		//Deep copy (побитовое копирование):
 		int a = 2;
 		int b = 3;
 		a = b;
@@ -65,6 +80,32 @@ public:
 		for (int i = 0; i < size; i++)this->str[i] = other.str[i];
 		cout << "CopyAssignment:\t\t" << this << endl;
 		return *this;
+	}
+	String& operator=(String&& other)
+	{
+		if (this == &other)return *this;
+		delete[] this->str;
+		//Shallow copy (поверхностное копирование):
+		this->size = other.size;
+		this->str = other.str;
+		other.size = 0;
+		other.str = nullptr;
+		cout << "MoveAssignment:\t\t" << this << endl;
+	}
+
+	//              Operators:
+	String& operator+=(const String& other)
+	{
+		return *this = *this + other;
+	}
+
+	const char& operator[](int i)const
+	{
+		return str[i];
+	}
+	char& operator[](int i)
+	{
+		return str[i];
 	}
 
 	//              Methods:
@@ -89,8 +130,26 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 	return os << obj.get_str();
 }
 
+std::ostream& operator<<(std::ostream& os, const String& obj)
+{
+	//os - Output Stream
+	//obj - Object
+	return os << obj.get_str();
+}
+std::istream& operator>>(std::istream& is, String& obj)
+{
+	//is - Input Stream
+	const int SIZE = 102400;
+	char buffer[SIZE]{};
+	is >> buffer;
+	obj = buffer;
+	return is; // >> obj.get_str();
+}
+
 //#define CONSTRUCTORS_CHECK
 //#define HOME_WORK_1
+//#define ISTREAM_OPERATOR
+
 
 void main()
 {
@@ -118,8 +177,29 @@ void main()
 #ifdef HOME_WORK_1
 	String str1 = "Hello";
 	String str2 = "World";
-	String str3 = str1 + " " + str2;
-	cout << str1 << " + " << str2 << " = " << str3 << endl;
+	//String str3 = str1 + " " + str2;   //Move constructor
+	//String str3;
+	//str3 = str1 + str2;                //Move assignment
+	//cout << str1 << " + " << str2 << " = " << str3 << endl;
+	str1 += str2;
+	cout << delimiter << endl;
+	cout << str1 << endl;
+	cout << delimiter << endl;
 #endif // HOME_WORK_1
+
+
+
+#ifdef ISTREAM_OPERATOR
+	String last_name;
+	String first_name;
+	//str.print();
+	cout << "Введите ваше имя: ";
+
+	cin >> last_name >> first_name;
+
+
+	//str.print();
+	cout << last_name << " " << first_name << endl;
+#endif // ISTREAM_OPERATOR
 
 }
