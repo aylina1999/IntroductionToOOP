@@ -149,6 +149,7 @@ std::istream& operator>>(std::istream& is, String& obj)
 //#define CONSTRUCTORS_CHECK
 //#define HOME_WORK_1
 //#define ISTREAM_OPERATOR
+//#define CONSTRUCTORS_CHECK_2
 
 
 void main()
@@ -201,5 +202,28 @@ void main()
 	//str.print();
 	cout << last_name << " " << first_name << endl;
 #endif // ISTREAM_OPERATOR
+
+
+#ifdef CONSTRUCTORS_CHECK_2
+	String str1;      //default constructor
+	str1.print();
+	String str2(8);   //single-argument constructor of type 'int'
+	str2.print();
+	String str3 = "Hello";  //single-argument constructor of type 'const char'
+	str3.print();
+	String str4();    //«десь не вызываетс€ конструктор по умолчанию,
+	//в этой строке объ€вл€етс€ функци€ str4, котора€ ничего не принимает
+	//и возвращает значение типа String.
+//str4.print();   //this isn't an object
+	String str5{}     //€вный вызов конструкора по умолчанию
+	str5.print();
+
+	String str6{ 123 };
+	str6.print();
+
+	String str7{ "World" };
+	str7.print();
+#endif // CONSTRUCTORS_CHECK_2
+
 
 }
